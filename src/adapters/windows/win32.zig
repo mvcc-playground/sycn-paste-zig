@@ -79,3 +79,4 @@ pub extern "kernel32" fn GlobalAlloc(uFlags: UINT, dwBytes: usize) callconv(.win
 pub extern "kernel32" fn GlobalFree(hMem: HANDLE) callconv(.winapi) HANDLE;
 pub extern "kernel32" fn GlobalLock(hMem: HANDLE) callconv(.winapi) ?*anyopaque;
 pub extern "kernel32" fn GlobalUnlock(hMem: HANDLE) callconv(.winapi) BOOL;
+pub extern "kernel32" fn Sleep(dwMilliseconds: DWORD) callconv(.winapi) void;

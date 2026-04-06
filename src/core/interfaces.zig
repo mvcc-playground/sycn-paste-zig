@@ -1,15 +1,15 @@
-pub const HotkeyCallback = *const fn (ctx: *anyopaque) anyerror!void;
+pub const TickCallback = *const fn (ctx: *anyopaque) anyerror!void;
 
-pub const HotkeyAdapter = struct {
+pub const TickAdapter = struct {
     ctx: *anyopaque,
-    run_loop_fn: *const fn (ctx: *anyopaque, on_hotkey: HotkeyCallback, on_hotkey_ctx: *anyopaque) anyerror!void,
+    run_loop_fn: *const fn (ctx: *anyopaque, on_tick: TickCallback, on_tick_ctx: *anyopaque) anyerror!void,
     deinit_fn: *const fn (ctx: *anyopaque) void,
 
-    pub fn runLoop(self: HotkeyAdapter, on_hotkey: HotkeyCallback, on_hotkey_ctx: *anyopaque) !void {
-        return self.run_loop_fn(self.ctx, on_hotkey, on_hotkey_ctx);
+    pub fn runLoop(self: TickAdapter, on_tick: TickCallback, on_tick_ctx: *anyopaque) !void {
+        return self.run_loop_fn(self.ctx, on_tick, on_tick_ctx);
     }
 
-    pub fn deinit(self: HotkeyAdapter) void {
+    pub fn deinit(self: TickAdapter) void {
         self.deinit_fn(self.ctx);
     }
 };
@@ -33,7 +33,7 @@ pub const PasteAdapter = struct {
 };
 
 pub const AppAdapters = struct {
-    hotkey: HotkeyAdapter,
+    tick: TickAdapter,
     text_source: TextSourceAdapter,
     paste: PasteAdapter,
 };

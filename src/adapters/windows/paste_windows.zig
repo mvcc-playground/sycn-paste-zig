@@ -19,7 +19,6 @@ pub const WindowsPasteAdapter = struct {
     fn paste(ctx: *anyopaque, text: []const u8) !void {
         const self: *WindowsPasteAdapter = @ptrCast(@alignCast(ctx));
         try self.setClipboardUnicodeText(text);
-        try sendCtrlV();
     }
 
     fn setClipboardUnicodeText(self: *WindowsPasteAdapter, text: []const u8) !void {
@@ -45,30 +44,4 @@ pub const WindowsPasteAdapter = struct {
         if (win32.SetClipboardData(win32.CF_UNICODETEXT, hmem) == null) return error.SetClipboardDataFailed;
     }
 
-    fn sendCtrlV() !void {
-        var inputs = [_]win32.INPUT{
-            keyEvent(win32.VK_CONTROL, 0),
-            keyEvent(win32.VK_V, 0),
-            keyEvent(win32.VK_V, win32.KEYEVENTF_KEYUP),
-            keyEvent(win32.VK_CONTROL, win32.KEYEVENTF_KEYUP),
-        };
-
-        const sent = win32.SendInput(inputs.len, &inputs, @sizeOf(win32.INPUT));
-        if (sent != inputs.len) return error.SendInputFailed;
-    }
-
-    fn keyEvent(vk: u16, flags: u32) win32.INPUT {
-        return .{
-            .type = win32.INPUT_KEYBOARD,
-            .data = .{
-                .ki = .{
-                    .wVk = vk,
-                    .wScan = 0,
-                    .dwFlags = flags,
-                    .time = 0,
-                    .dwExtraInfo = 0,
-                },
-            },
-        };
-    }
 };
