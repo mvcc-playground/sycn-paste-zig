@@ -1,3 +1,25 @@
 [tools]
 deno = "2.7"
 zig = "0.15.2"
+
+[tasks.build]
+description = "Build the Zig executable"
+run = "zig build"
+
+[tasks.app]
+description = "Build and run the Zig app"
+run = "zig build run"
+
+[tasks.test]
+description = "Run all Zig tests"
+run = "zig build test"
+
+[tasks.api]
+description = "Start the Deno API server"
+run = "deno run --allow-net api/main.ts"
+
+[tasks.dev]
+description = "Start both the API server and the Zig app"
+run = [
+    { tasks = ["api", "app"] }
+]

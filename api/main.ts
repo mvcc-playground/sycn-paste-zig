@@ -143,7 +143,9 @@ function handleRequest(req: Request): Response | Promise<Response> {
     if (req.headers.get("upgrade") === "websocket") {
       return handleWebSocket(req);
     }
-    return new Response("WebSocket endpoint. Use ws:// protocol", { status: 426 });
+    return new Response("WebSocket endpoint. Use ws:// protocol", {
+      status: 426,
+    });
   }
 
   // HTTP endpoints
