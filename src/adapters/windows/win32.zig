@@ -80,3 +80,38 @@ pub extern "kernel32" fn GlobalFree(hMem: HANDLE) callconv(.winapi) HANDLE;
 pub extern "kernel32" fn GlobalLock(hMem: HANDLE) callconv(.winapi) ?*anyopaque;
 pub extern "kernel32" fn GlobalUnlock(hMem: HANDLE) callconv(.winapi) BOOL;
 pub extern "kernel32" fn Sleep(dwMilliseconds: DWORD) callconv(.winapi) void;
+
+// WinSock2
+pub const SOCKET = usize;
+pub const INVALID_SOCKET: SOCKET = ~@as(SOCKET, 0);
+pub const SOCKET_ERROR: i32 = -1;
+pub const AF_INET: i32 = 2;
+pub const SOCK_STREAM: i32 = 1;
+pub const IPPROTO_TCP: i32 = 6;
+
+pub const WSADATA = extern struct {
+    wVersion: WORD,
+    wHighVersion: WORD,
+    iMaxSockets: u16,
+    iMaxUdpDg: u16,
+    lpVendorInfo: ?[*]u8,
+    szDescription: [257]u8,
+    szSystemStatus: [129]u8,
+};
+
+pub const sockaddr_in = extern struct {
+    sin_family: i16,
+    sin_port: u16,
+    sin_addr: u32,
+    sin_zero: [8]u8,
+};
+
+pub extern "ws2_32" fn WSAStartup(wVersionRequested: WORD, lpWSAData: *WSADATA) callconv(.winapi) i32;
+pub extern "ws2_32" fn WSACleanup() callconv(.winapi) i32;
+pub extern "ws2_32" fn WSAGetLastError() callconv(.winapi) i32;
+pub extern "ws2_32" fn socket(af: i32, socktype: i32, protocol: i32) callconv(.winapi) SOCKET;
+pub extern "ws2_32" fn connect(s: SOCKET, name: *const sockaddr_in, namelen: i32) callconv(.winapi) i32;
+pub extern "ws2_32" fn send(s: SOCKET, buf: [*]const u8, len: i32, flags: i32) callconv(.winapi) i32;
+pub extern "ws2_32" fn recv(s: SOCKET, buf: [*]u8, len: i32, flags: i32) callconv(.winapi) i32;
+pub extern "ws2_32" fn closesocket(s: SOCKET) callconv(.winapi) i32;
+pub extern "ws2_32" fn htons(hostshort: u16) callconv(.winapi) u16;
