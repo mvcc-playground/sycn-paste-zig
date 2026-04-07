@@ -1,3 +1,6 @@
+[settings]
+task.output = "prefix"
+
 [tools]
 deno = "2.7"
 zig = "0.15.2"
