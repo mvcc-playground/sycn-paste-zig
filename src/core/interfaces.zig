@@ -1,3 +1,5 @@
+const std = @import("std");
+
 pub const TickCallback = *const fn (ctx: *anyopaque) anyerror!void;
 
 pub const TickAdapter = struct {
@@ -32,8 +34,33 @@ pub const PasteAdapter = struct {
     }
 };
 
+/// Reads the current local clipboard content.
+/// Returns an owned slice allocated with the provided allocator — caller must free.
+pub const ClipboardReadAdapter = struct {
+    ctx: *anyopaque,
+    read_fn: *const fn (ctx: *anyopaque, allocator: std.mem.Allocator) anyerror![]u8,
+
+    pub fn read(self: ClipboardReadAdapter, allocator: std.mem.Allocator) ![]u8 {
+        return self.read_fn(self.ctx, allocator);
+    }
+};
+
+/// Publishes text to the sync server (HTTP POST).
+pub const PublishAdapter = struct {
+    ctx: *anyopaque,
+    publish_fn: *const fn (ctx: *anyopaque, text: []const u8) anyerror!void,
+
+    pub fn publish(self: PublishAdapter, text: []const u8) !void {
+        return self.publish_fn(self.ctx, text);
+    }
+};
+
 pub const AppAdapters = struct {
     tick: TickAdapter,
     text_source: TextSourceAdapter,
     paste: PasteAdapter,
+    /// When non-null, enables bidirectional sync (local clipboard → server).
+    clipboard_read: ?ClipboardReadAdapter = null,
+    /// Required when clipboard_read is non-null.
+    publish: ?PublishAdapter = null,
 };
