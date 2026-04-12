@@ -72,6 +72,7 @@ pub extern "user32" fn GetMessageW(lpMsg: *MSG, hWnd: HWND, wMsgFilterMin: UINT,
 pub extern "user32" fn OpenClipboard(hWndNewOwner: HWND) callconv(.winapi) BOOL;
 pub extern "user32" fn EmptyClipboard() callconv(.winapi) BOOL;
 pub extern "user32" fn SetClipboardData(uFormat: UINT, hMem: HANDLE) callconv(.winapi) HANDLE;
+pub extern "user32" fn GetClipboardData(uFormat: UINT) callconv(.winapi) HANDLE;
 pub extern "user32" fn CloseClipboard() callconv(.winapi) BOOL;
 pub extern "user32" fn SendInput(cInputs: UINT, pInputs: [*]INPUT, cbSize: i32) callconv(.winapi) UINT;
 
